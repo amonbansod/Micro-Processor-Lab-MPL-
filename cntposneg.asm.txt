@@ -1,0 +1,227 @@
+global	_start
+
+_start:
+
+section .text
+
+;macro for 'display'
+
+
+%macro print 2
+
+MOV rax,1
+MOV rdi,1
+
+MOV rsi,%1
+MOV rdx,%2
+syscall
+
+%endmacro
+
+
+
+;MOV rax,1234567812345678H
+
+;call displayproc
+
+
+
+; display an array
+
+; to point to an array
+
+MOV rsi,arr
+
+;to fetch element from array
+
+l3:	MOV rax,[rsi]
+	
+	push rsi
+
+	call displayproc
+
+	pop rsi
+
+;to point to the next element
+
+	add rsi,8
+
+	dec byte [cnt1] 
+
+	jnz l3
+
+MOV rsi,arr
+
+l7:	bt qword [rsi],63
+
+;bit test quad word (64 bits)
+
+;bit test instruction reflects MSB in CF(carry flag)
+
+	jc lnegc
+
+;jump to label if CF=1
+
+	inc byte[pcnt]
+
+	jmp next
+
+	
+	lnegc:	inc byte[ncnt]
+
+	next:	add rsi,8
+
+		dec byte[cnt2]
+
+		jnz l7
+
+	MOV al,byte[pcnt]
+
+	call displayproc1
+
+	MOV al,byte[ncnt]
+
+	call displayproc1
+
+
+
+
+
+;end
+
+MOV rax,60
+MOV rdi,0
+syscall
+
+
+displayproc1:
+
+;Point to the 2 nd location of an empty array
+
+MOV rsi,disparr+1
+
+
+;declare count as 2
+
+MOV rcx,2
+
+
+;'div' instruction to seprte the numbers
+
+l2: MOV rdx,0
+    MOV rbx,10H
+    div rbx
+
+	cmp dl,09H
+	
+	;jump to l1 when dl is below or equal to 09H
+
+	jbe	l1			
+
+	add dl,07H
+
+	l1:add dl,30H
+
+	;insert dl in array
+
+
+	MOV [rsi],dl
+
+	;decrement rsi	
+	
+	dec rsi			
+
+	;decrement rcx
+
+	dec rcx
+
+	;jump to l2 when rcx is not equal to zero
+			
+	jnz	l2			
+
+
+	print disparr,2
+
+	ret
+
+
+
+
+
+
+
+displayproc:
+
+;Point to the 16th location of an empty array
+
+MOV rsi,disparr+15
+
+
+;declare count as 16
+
+MOV rcx,16
+
+
+;'div' instruction to seprte the numbers
+
+l5: MOV rdx,0
+    MOV rbx,10H
+    div rbx
+
+	cmp dl,09H
+	
+	;jump to l8 when dl is below or equal to 09H
+
+	jbe	l8			
+
+	add dl,07H
+
+	l8:add dl,30H
+
+	;insert dl in array
+
+
+	MOV [rsi],dl
+
+	;decrement rsi	
+	
+	dec rsi			
+
+	;decrement rcx
+
+	dec rcx
+
+	;jump to l2 when rcx is not equal to zero
+			
+	jnz	l5			
+
+
+	print disparr,16
+
+	ret
+
+
+
+
+section .data
+
+arr dq 1234567812345678H,1234567887654321H,8765432112345678H,7894561233216549H,9638527417894561H,7418529633216549H
+
+cnt1 db 05
+
+cnt2 db 05
+
+
+
+
+
+section .bss
+
+disparr resb 32
+
+pcnt resb 02
+
+ncnt resb 02
+
+
+
