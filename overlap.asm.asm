@@ -1,3 +1,12 @@
+;============================================================================================================================
+
+ ;BLOCK TRANSFER USING OVERLAP.
+ 
+ ;MENU DRIVEN PROGRAM FOR OVERLAP USING AND WITHOUT USING STRING OPPERATION.
+ 
+ ;============================================================================================================================
+
+
 global _start
 _start:
 
@@ -31,6 +40,9 @@ MOV rdx,%2
 syscall
 %endmacro
 
+
+;main menu to display all options
+
 bmenu :  print msg,len
 
          print msg4,len4
@@ -57,6 +69,10 @@ bmenu :  print msg,len
 
 
 
+
+;if user has choice as '1'
+
+
 ch1:    print msg,len
 
         print msg1, len1
@@ -81,6 +97,8 @@ ch1:    print msg,len
 
         jmp bmenu
 
+
+;if user has choice as '2'
 
 
 ch2:
@@ -130,6 +148,9 @@ ch2:
 
 
 
+;if user has choice as '3'
+
+
 ch3:
 	print msg,len
 
@@ -172,6 +193,7 @@ ch3:
 
 
 
+;if user has choice as '4'
 
 
 ch4:
